@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            display: flex;
+            flex-direction: column;
+        }
+        input{
+            width: 770px;
+            outline-color: blue;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .content{
+            margin: 0 auto;
+        }
+        ul{
+            list-style: none;
+            width: 770px;
+            border: 1px solid black;
+            display: none;
+            align-self: flex-end;
+        }
+        li{
+            width: 100%;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
+        li:hover{
+            background-color: #F8F8F8;
+        }
+        li>a{
+            width: 100%;
+            color: black;
+            text-decoration: none;
+        }
+        img{
+            width: 20%;
+            display: block;
+            margin: 60px auto 0;
+        }
+        button{
+            width: 80px;
+            height: 50px;
+            background-color: blue;
+            color: white;
+            border: none;
+            margin-left: -5px;
+            cursor: pointer;
+        }
+        @media screen and (max-width: 810px) {
+            button{
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="bd_logo1.png" alt="logo">
+    <div class="content">
+        <input type="text">
+        <button>搜索</button>
+        <ul></ul>
+    </div>
+
+    <script>
+        let ul = document.querySelector("ul")
+        let input = document.querySelector("input")
+        let button = document.querySelector("button")
+       
+        input.addEventListener("input",function(){
+            // 这里的val就是你input框中输入的内容
+            let val = this.value;
+            document.onkeyup = function(event){
+                let code = event.keyCode;
+                if(code===13){
+                    location.href = `https://www.baidu.com/s?wd=${val}`
+                }
+            }
+            button.addEventListener("click",function(){
+                location.href = `https://www.baidu.com/s?wd=${val}`
+             })
+            let script = document.createElement("script");
+            script.src = `https://www.baidu.com/sugrec?pre=1&p=3&ie=utf-8&json=1&prod=pc&from=pc_web&wd=${this.value}&req=2&csor=1&cb=fn&_=1586574150849`
+            script.className = "jsonp"
+            document.body.appendChild(script);
+        })
+        function fn(res){
+            let str = '';
+            if(res.g){
+                res.g.forEach(item=>{
+                    str += "<li>"+"<a href='https://www.baidu.com/s?wd="+item.q+"'>"+item.q+"</a>"+'</li>'
+                })
+                ul.innerHTML = str
+                ul.style.display = "block";
+                // 删除script标签
+                let jsonp = document.querySelectorAll(".jsonp")
+                for(let i = 0; i < jsonp.length; i++){
+                    document.body.removeChild(jsonp[i]);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
